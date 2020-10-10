@@ -1,21 +1,9 @@
 char incomingByte = 0;
-const int green_pin = 3;
-const int red_pin = 4;
-const int dt = 500;
 
 // first 3 bits are the lenght of the character and the rest are the dots (0) and dashes (1)
 char encode_dict[] = {66, 132, 164, 131, 1, 36, 195, 4, 2, 116, 163, 68, 194, 130, 227, 100, 212, 67, 3, 129, 35, 20, 99, 148, 180, 196, 253, 125, 61, 29, 13, 5, 133, 197, 229, 245};
 
-void setup() 
-{
-  // start serial connection
-  Serial.begin(9600);
-
-  pinMode(green_pin, OUTPUT);
-  pinMode(red_pin, OUTPUT);
-}
-
-void loop() 
+void loopencode() 
 {
   // send data only when you receive data:
   if (Serial.available() > 0) {

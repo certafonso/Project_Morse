@@ -1,7 +1,3 @@
-const int Button_pin = 2;
-const int green_pin = 3;
-const int red_pin = 4;
-const int dt = 1000;
 int time_on = 0;
 int time_off = 0;
 char letter = 0;      // the dashes (1) an dots (0)
@@ -17,18 +13,7 @@ char dict6[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '?', '_', 0, 0, 0, 0, '\"', 
 
 char *dict[6] = {dict1, dict2, dict3, dict4, dict5, dict6};
 
-void setup() 
-{
-  // start serial connection
-  Serial.begin(9600);
-
-  // configure pins
-  pinMode(Button_pin, INPUT_PULLUP);
-  pinMode(green_pin, OUTPUT);
-  pinMode(red_pin, OUTPUT);
-}
-
-void loop() 
+void loopdecode() 
 {
   int button = !digitalRead(Button_pin);
 
