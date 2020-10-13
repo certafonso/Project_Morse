@@ -58,23 +58,23 @@ void dodecode()
       
       if(decoded){
         if(decoded == 1){
-          Serial.println("Caracter not supported");
+          Serial.print("Caracter not supported");
         }
         else{
-          Serial.println(decoded);  
+          Serial.print(decoded);  
         }
         digitalWrite(green_pin, HIGH);
         delay(100);
         digitalWrite(green_pin, LOW);
         return;
       }
-      else{
-        Serial.println("Invalid caracter");
-      }
+      // else{
+      //   Serial.println("Invalid caracter");
+      // }
     }
-    else{
-      Serial.println("Error");
-    }
+    // else{
+    //   Serial.println("Error");
+    // }
     digitalWrite(red_pin, HIGH);
     delay(100);
     digitalWrite(red_pin, LOW);
