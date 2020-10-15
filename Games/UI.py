@@ -10,7 +10,7 @@ with open("./Games/Morse.json") as f:
 	morse_dict = json.load(f)
 
 class MorseText():
-	def __init__(self, x, screen_Y, font):
+	def __init__(self, x, y, font):
 		self.letter = ""
 		self.morse = ""
 
@@ -18,7 +18,7 @@ class MorseText():
 		self.font = font
 		self.color = (0, 0, 0)
 		self.x = x
-		self.screen_Y = screen_Y
+		self.y = y
 
 	def changeColor(self, color):
 		""" Changes the color of the text """
@@ -32,13 +32,16 @@ class MorseText():
 		self.changed = True
 
 	def display(self, display_surface):
+		""" Displays the letter on screen """
+
+		print(self.y, self.font.size(self.letter))
 
 		self.text_letter = self.font.render(self.letter, True, self.color) 
-		self.rect_letter = self.text_letter.get_rect(center=(self.x, self.screen_Y // 3))
+		self.rect_letter = self.text_letter.get_rect(center=(self.x, self.y - self.font.size(self.letter)[1]//2))
 		display_surface.blit(self.text_letter, self.rect_letter) 
 		
 		self.text_morse = self.font.render(self.morse, True, self.color)
-		self.rect_morse = self.text_morse.get_rect(center=(self.x, 2 * self.screen_Y // 3))
+		self.rect_morse = self.text_morse.get_rect(center=(self.x, self.y + self.font.size(self.morse)[1]//5))
 		display_surface.blit(self.text_morse, self.rect_morse)
 
 		self.changed = False
