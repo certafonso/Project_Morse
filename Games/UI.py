@@ -6,11 +6,11 @@ import serial
 import pygame
 import json
 
-with open("./Python_interface/Morse.json") as f:
+with open("./Games/Morse.json") as f:
 	morse_dict = json.load(f)
 
 class MorseText():
-	def __init__(self, x, font):
+	def __init__(self, x, screen_Y, font):
 		self.letter = ""
 		self.morse = ""
 
@@ -18,6 +18,7 @@ class MorseText():
 		self.font = font
 		self.color = (0, 0, 0)
 		self.x = x
+		self.screen_Y = screen_Y
 
 	def changeColor(self, color):
 		""" Changes the color of the text """
@@ -27,17 +28,17 @@ class MorseText():
 		""" Updates the text objects to a letter """
 		
 		self.letter = letter
-		self.morse = morse_dict[letter.decode()]
+		self.morse = morse_dict[letter]
 		self.changed = True
 
 	def display(self, display_surface):
 
-		self.text_letter = font.render(self.letter, True, black) 
-		self.rect_letter = self.text_letter.get_rect(center=(self.x, SIZE[1] // 3))
+		self.text_letter = self.font.render(self.letter, True, self.color) 
+		self.rect_letter = self.text_letter.get_rect(center=(self.x, self.screen_Y // 3))
 		display_surface.blit(self.text_letter, self.rect_letter) 
 		
-		self.text_morse = font.render(self.morse, True, black)
-		self.rect_morse = self.text_morse.get_rect(center=(self.x, 2 * SIZE[1] // 3))
+		self.text_morse = self.font.render(self.morse, True, self.color)
+		self.rect_morse = self.text_morse.get_rect(center=(self.x, 2 * self.screen_Y // 3))
 		display_surface.blit(self.text_morse, self.rect_morse)
 
 		self.changed = False
@@ -61,14 +62,14 @@ if __name__ == "__main__":
 	# create a font object
 	font = pygame.font.Font('freesansbold.ttf', SIZE[0] // 2) 
 
-	text = MorseText(SIZE[0] // 2, font)
+	text = MorseText(SIZE[0] // 2, SIZE[1], font)
 	
 	while True :
 		# get serial
 		if ser.inWaiting():
 			word = ser.read(1)
 
-			text.updateText(word)
+			text.updateText(word.decode())
 	
 		for event in pygame.event.get() : 
 			if event.type == pygame.QUIT : 
