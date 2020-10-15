@@ -9,53 +9,77 @@ import json
 with open("./Python_interface/Morse.json") as f:
 	morse_dict = json.load(f)
 
-ser = serial.Serial('COM5', 9600)
+class MorseText():
+	def __init__(self, x, font):
+		self.letter = ""
+		self.morse = ""
 
-pygame.init() 
+		self.changed = True
+		self.font = font
+		self.color = (0, 0, 0)
+		self.x = x
 
-white = (255, 255, 255) 
-black = (0, 0, 0)
-  
-# dimensions
-X = 500
-Y = 500
+	def changeColor(self, color):
+		""" Changes the color of the text """
+		self.color = color
 
-# set dimensions and window name
-display_surface = pygame.display.set_mode((X, Y))
-pygame.display.set_caption("Project Morse") 
+	def updateText(self, letter):
+		""" Updates the text objects to a letter """
+		
+		self.letter = letter
+		self.morse = morse_dict[letter.decode()]
+		self.changed = True
 
-word = ""
-word2 = ""
+	def display(self, display_surface):
 
-# create a font object
-font = pygame.font.Font('freesansbold.ttf', X // 2) 
-  
-while True :
-	# get serial
-	if ser.inWaiting():
-		word = ser.read(1)
+		self.text_letter = font.render(self.letter, True, black) 
+		self.rect_letter = self.text_letter.get_rect(center=(self.x, SIZE[1] // 3))
+		display_surface.blit(self.text_letter, self.rect_letter) 
+		
+		self.text_morse = font.render(self.morse, True, black)
+		self.rect_morse = self.text_morse.get_rect(center=(self.x, 2 * SIZE[1] // 3))
+		display_surface.blit(self.text_morse, self.rect_morse)
 
-		try:
-			word2 = morse_dict[word.decode()]
-		except: pass
+		self.changed = False
 
-	display_surface.fill(white)
 
-	# update text
-	text = font.render(word, True, black) 
-	textRect = text.get_rect(center=(X // 2, Y // 3))
-	display_surface.blit(text, textRect) 
+if __name__ == "__main__":
+	ser = serial.Serial('COM5', 9600)
 
-	# update text
-	text2 = font.render(word2, True, black)
-	textRect2 = text2.get_rect(center=(X // 2, 2 * Y // 3))
-	display_surface.blit(text2, textRect2) 
-  
-	for event in pygame.event.get() : 
-		if event.type == pygame.QUIT : 
+	pygame.init() 
 
-			pygame.quit()
-			ser.close()
-			quit() 
+	white = (255, 255, 255) 
+	black = (0, 0, 0)
+	
+	# dimensions
+	SIZE = (500, 500)
 
-	pygame.display.update()  
+	# set dimensions and window name
+	display_surface = pygame.display.set_mode((SIZE[0], SIZE[1]))
+	pygame.display.set_caption("Project Morse") 
+
+	# create a font object
+	font = pygame.font.Font('freesansbold.ttf', SIZE[0] // 2) 
+
+	text = MorseText(SIZE[0] // 2, font)
+	
+	while True :
+		# get serial
+		if ser.inWaiting():
+			word = ser.read(1)
+
+			text.updateText(word)
+	
+		for event in pygame.event.get() : 
+			if event.type == pygame.QUIT : 
+
+				pygame.quit()
+				ser.close()
+				quit() 
+
+		if text.changed:
+			display_surface.fill(white)
+			
+			text.display(display_surface)
+
+		pygame.display.update()  
