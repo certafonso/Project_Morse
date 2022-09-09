@@ -1,1 +1,3 @@
 /.vscode
+/Games/.venv
+/Games/__pycache__
