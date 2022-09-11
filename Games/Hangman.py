@@ -130,7 +130,7 @@ def main():
 	text = UI.MorseText(7*SIZE[0] // 8, SIZE[1] // 4, font)
 
 	# Initialise serial connection
-	ser = serial.Serial('COM5', 9600)
+	ser = serial.Serial(argv[1], 9600)
 
 	# Initialise the game
 	game = Hangman(argv[2], font, SIZE)

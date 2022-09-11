@@ -1,5 +1,6 @@
 """
 A simple UI that just shows the letter inputed by user on the screen
+Usage: python UI.py [COM port]
 """
 
 import serial
@@ -47,27 +48,39 @@ class MorseText():
 		self.changed = False
 
 
-if __name__ == "__main__":
-	ser = serial.Serial('COM5', 9600)
+def main():
+	from sys import argv
 
+	# Checks for the correct number of arguments
+	if len(argv) < 2:
+		print("Wrong number of arguments. Usage: python UI.py [COM port]")
+		return
+
+	# Initialise pygame and some colors
 	pygame.init() 
-
 	white = (255, 255, 255) 
 	black = (0, 0, 0)
-	
-	# dimensions
-	SIZE = (500, 500)
 
-	# set dimensions and window name
+	# Set dimensions of the display
+	SIZE = (500, 500)
 	display_surface = pygame.display.set_mode((SIZE[0], SIZE[1]))
+
+	# Set window name
 	pygame.display.set_caption("Project Morse") 
 
-	# create a font object
+	# Create a font object
 	font = pygame.font.Font('freesansbold.ttf', SIZE[0] // 2) 
 
-	text = MorseText(SIZE[0] // 2, SIZE[1], font)
-	
-	while True :
+	# Create a MorseText object to display the guesses
+	text = MorseText(SIZE[0] // 2, SIZE[1] // 2, font)
+
+	# Initialise serial connection
+	ser = serial.Serial(argv[1], 9600)
+
+	# Game loop
+	running = True
+	while(running):
+
 		# get serial
 		if ser.inWaiting():
 			word = ser.read(1)
@@ -79,7 +92,7 @@ if __name__ == "__main__":
 
 				pygame.quit()
 				ser.close()
-				quit() 
+				return
 
 		if text.changed:
 			display_surface.fill(white)
@@ -87,3 +100,6 @@ if __name__ == "__main__":
 			text.display(display_surface)
 
 		pygame.display.update()  
+
+if __name__ == "__main__":
+	main()
