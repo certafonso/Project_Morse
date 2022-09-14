@@ -4,10 +4,11 @@ Usage: python hangman.py [COM port] [word]
 """
 
 
-import serial
 import UI
 import pygame
 import os, os.path
+
+from MorseSerial import MorseSerial
 
 class Hangman():
 	def __init__(self, word, font, size):
@@ -130,7 +131,7 @@ def main():
 	text = UI.MorseText(7*SIZE[0] // 8, SIZE[1] // 4, font)
 
 	# Initialise serial connection
-	ser = serial.Serial(argv[1], 9600)
+	ser = MorseSerial(argv[1], 9600)
 
 	# Initialise the game
 	game = Hangman(argv[2], font, SIZE)
@@ -147,11 +148,8 @@ def main():
 
 		if not game.finished:
 			# Verify for new guesses, if there is one, update the text
-			if ser.inWaiting():
-				letter = ser.read(1).decode()
-
-				print(letter)
-
+			letter = ser.receive()
+			if letter != None:
 				text.updateText(letter)
 
 				game.checkGuess(letter)

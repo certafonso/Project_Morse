@@ -3,9 +3,10 @@ A simple UI that just shows the letter inputed by user on the screen
 Usage: python UI.py [COM port]
 """
 
-import serial
 import pygame
 import json
+
+from MorseSerial import MorseSerial
 
 with open("./Games/Morse.json") as f:
 	morse_dict = json.load(f)
@@ -75,17 +76,17 @@ def main():
 	text = MorseText(SIZE[0] // 2, SIZE[1] // 2, font)
 
 	# Initialise serial connection
-	ser = serial.Serial(argv[1], 9600)
+	ser = MorseSerial(argv[1], 9600)
 
 	# Game loop
 	running = True
 	while(running):
 
 		# get serial
-		if ser.inWaiting():
-			word = ser.read(1)
+		word = ser.receive()
 
-			text.updateText(word.decode())
+		if word != None:
+			text.updateText(word)
 	
 		for event in pygame.event.get() : 
 			if event.type == pygame.QUIT : 
