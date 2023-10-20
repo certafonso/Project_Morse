@@ -98,8 +98,12 @@ class Hangman():
 
 		self.stages = []
 
+		# Order filenames to ensure the images come in the correct order
+		file_list = os.listdir(path)
+		file_list.sort()
+
 		# Search for all images in the respective folder and load them
-		for f in os.listdir(path):
+		for f in file_list:
 			ext = os.path.splitext(f)[1]
 			if ext.lower() == ".png":
 				self.stages.append(pygame.image.load(os.path.join(path,f)))
